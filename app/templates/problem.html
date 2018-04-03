@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block page_content %}
+<h1>{{ problem.title }}</h1>
+<p> {{ problem.detail }}</p>
+{{ wtf.quick_form(form) }}
+{% if res %}
+{% if res[0] == 0 %}
+<h2>Result: Compile error</h2>
+<pre>{{ res[1] }}</pre>
+{% elif res[0] == 1 %}
+<h2>Result: Accept</h2>
+{% elif res[0] == 2 %}
+<h2>Result: Wrong Answer</h2>
+</br>
+<h2>Input</h2>
+<pre>{{ res[3] }}</pre>
+<h2>Student Output</h2>
+<pre>{{ res[1] }}</pre>
+<h2>Standard Output</h2>
+<pre>{{ res[2] }}</pre>
+{% endif %}
+{% endif %}
+{% endblock %}
