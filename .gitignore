@@ -1,4 +1,5 @@
 problem
 *.pyc
-*.sqilite
+*.sqlite
+*__pycache__*
 
