@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block scripts %}
+{{ super() }}
+<script type='text/javascript' src='{{ url_for('static', filename='tab.js')}}'></script>
+{% endblock %}
+
+{% block page_content %}
+<form method="POST">
+    {{ form.hidden_tag() }}
+    {{ form.title.label }}{{ form.title(class='form-control') }}
+    {{ form.detail.label }}{{ form.detail(class='form-control') }}
+    {{ form.main.label }}{{ form.main(id="code_area", spellcheck="false", autocapitalize="off", autocomplete="off", autocorrect="off", style="height: 450px; width: 100%; background-color: black; color: white; font-family: Courier") }}
+    {{ form.rand.label }}{{ form.rand(id="code_area", spellcheck="false", autocapitalize="off", autocomplete="off", autocorrect="off", style="height: 450px; width: 100%; background-color: black; color: white; font-family: Courier") }}
+    {{ form.submit() }}
+</form>
+{% endblock %}

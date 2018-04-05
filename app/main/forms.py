@@ -27,6 +27,13 @@ class SubmitForm(FlaskForm):
     body = TextAreaField(' 输入代码', validators=[DataRequired()])
     submit = SubmitField('提交')
 
+class CreateProblemForm(FlaskForm):
+    main = TextAreaField('main.c', validators=[DataRequired()])
+    rand = TextAreaField('random.c', validators=[DataRequired()])
+    title = StringField('Title', validators=[DataRequired()])
+    detail = TextAreaField('Detail')
+    submit = SubmitField('Create')
+
 class CreateCourseForm(FlaskForm):
     course_name = StringField('课程名', validators=[DataRequired()])
     submit = SubmitField('提交')

@@ -1,7 +1,7 @@
 import os
 import subprocess
 from ..models import *
-from flask import render_template
+from flask import render_template, flash, redirect, url_for
 from . import main
 from .forms import *
 
@@ -27,6 +27,57 @@ def problem(id):
         res = judge(int(id), data)
     return render_template('problem.html', problem=problem,
                             res=res, form=submit_form)
+
+@main.route('/create', methods=['GET', 'POST'])
+def create():
+    form = CreateProblemForm()
+
+    if form.validate_on_submit():
+        title = form.title.data
+        detail = form.detail.data
+        main = form.main.data
+        rand = form.rand.data
+        p = Problem(title=title, detail=detail)
+        db.session.add(p)
+        db.session.commit()
+        createFile('problem/%d/standard/main.c' % p.id, main)
+        createFile('problem/%d/random/main.c' % p.id, rand)
+        flash('Success')
+        return redirect(url_for('main.problem_list'))
+
+    return render_template('create.html', form=form)
+
+@main.route('/edit/<id>', methods=['GET', 'POST'])
+def edit(id):
+    p = Problem.query.get_or_404(id)
+    form = CreateProblemForm()
+
+    if form.validate_on_submit():
+        p.title = form.title.data
+        p.detail = form.detail.data
+        p.main = form.main.data
+        p.rand = form.rand.data
+        db.session.add(p)
+        db.session.commit()
+        createFile('problem/%d/standard/main.c' % p.id, p.main)
+        createFile('problem/%d/random/main.c' % p.id, p.rand)
+        flash('Success')
+        return redirect(url_for('main.problem', id=id))
+
+    form.title.data = p.title
+    form.detail.data = p.detail
+    with open('problem/%s/standard/main.c' % id) as fp:
+        form.main.data = fp.read()
+
+    with open('problem/%s/random/main.c' % id) as fp:
+        form.rand.data = fp.read()
+    return render_template('edit.html', form=form)
+
+
+def createFile(path, data):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, 'w') as fp:
+        fp.write(data)
 
 def judge(id, data):
     num = 30
