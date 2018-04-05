@@ -21,14 +21,12 @@ def problem(id):
     problem = Problem.query.get_or_404(id)
     submit_form = SubmitForm()
     res = None
-    status = ''
 
     if submit_form.validate_on_submit():
         data = submit_form.body.data
         res = judge(int(id), data)
-        status = 'Pass' if res[0] == res[1] else 'Wrong'
     return render_template('problem.html', problem=problem,
-                            res=res, form=submit_form, status=status)
+                            res=res, form=submit_form)
 
 def judge(id, data):
     num = 30
@@ -53,9 +51,12 @@ def judge(id, data):
 
     random_input_path = os.path.join(random_path, 'output')
     for i in range(num):
-        run(random_path)
-        run(student_path, random_input_path)
-        run(standard_path, random_input_path)
+        try:
+            run(random_path)
+            run(student_path, random_input_path)
+            run(standard_path, random_input_path)
+        except Exception:
+            return (3, )
 
         student_output = read_output(student_path)
         standard_output = read_output(standard_path)
@@ -81,13 +82,20 @@ def compile(path):
     return output
 
 def run(path, input_path=None):
+    file_out = open(os.path.join(path, 'output'), 'w')
     if input_path:
-        fp = os.popen(os.path.join(path, 'a.out 1>' + \
-                      os.path.join(path, 'output')) + \
-                      ' 0<%s' % input_path)
+        file_in = open(input_path)
+        subprocess.run([os.path.join(path, 'a.out')],
+                       stdout=file_out, stdin=file_in, timeout=1)
+        file_in.close()
+        # fp = os.popen(os.path.join(path, 'a.out 1>' + \
+        #               os.path.join(path, 'output')) + \
+        #               ' 0<%s' % input_path)
     else:
-        fp = os.popen(os.path.join(path, 'a.out 1>' + os.path.join(path, 'output')))
-    fp.close()
+        subprocess.run([os.path.join(path, 'a.out')], stdout=file_out, timeout=1)
+        # fp = os.popen(os.path.join(path, 'a.out 1>' + os.path.join(path, 'output')))
+    file_out.close()
+    # fp.close()
 
 def read_output(path):
     output = ''

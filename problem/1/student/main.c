@@ -1,6 +1,6 @@
 #include <stdio.h>
 
 int main() {
-    printf("hhhh\n");
+for(;;){}
     return 0;
 }
