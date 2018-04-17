@@ -107,7 +107,8 @@ def judge(id, data):
             run(student_path, random_input_path)
             run(standard_path, random_input_path)
         except Exception:
-            return (3, )
+            rand_input = read_output(random_path)
+            return (3, rand_input)
 
         student_output = read_output(student_path)
         standard_output = read_output(standard_path)
