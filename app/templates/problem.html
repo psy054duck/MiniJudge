@@ -11,7 +11,7 @@
 <form method="POST">
     {{ form.hidden_tag() }}
     <!--{{ form.body.label }} -->
-    {{ form.body(class="code_area", spellcheck="false", autocapitalize="off", autocomplete="off", autocorrect="off", style="height: 450px; width: 100%; background-color: black; color: white; font-family: Courier") }}
+    <label>main.c</label>{{ form.body(class="code_area", spellcheck="false", autocapitalize="off", autocomplete="off", autocorrect="off", style="height: 450px; width: 100%; background-color: black; color: white; font-family: Courier") }}
     {{ form.submit() }}
 </form>
 {% if res %}
