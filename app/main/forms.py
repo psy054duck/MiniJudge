@@ -31,7 +31,7 @@ class CreateProblemForm(FlaskForm):
     main = TextAreaField('main.c', validators=[DataRequired()])
     rand = TextAreaField('random.c', validators=[DataRequired()])
     title = StringField('Title', validators=[DataRequired()])
-    detail = TextAreaField('Detail')
+    detail = PageDownField('Detail')
     submit = SubmitField('Create')
 
 class CreateCourseForm(FlaskForm):

@@ -6,7 +6,7 @@
 {% endblock %}
 {% block page_content %}
 <h1>{{ problem.title }}</h1>
-<p> {{ problem.detail }}</p>
+<p>{{ problem.detail_html | safe }}</p>
 <!--{{ wtf.quick_form(form) }}-->
 <form method="POST">
     {{ form.hidden_tag() }}

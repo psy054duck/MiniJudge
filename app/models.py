@@ -94,8 +94,18 @@ class Problem(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.Text)
     detail = db.Column(db.Text)
+    detail_html = db.Column(db.Text)
 
-db.event.listen(Post.body, 'set', Post.on_changed_body)
+    @staticmethod
+    def on_changed_body(target, value, oldvalue, initiator):
+        allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
+                        'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul',
+                        'h1', 'h2', 'h3', 'p']
+        target.detail_html = bleach.linkify(bleach.clean(
+            markdown(value, output_format='html'),
+            tags=allowed_tags, strip=True))
+
+db.event.listen(Problem.detail, 'set', Problem.on_changed_body)
 
 @loginManager.user_loader
 def load_user(user_id):
